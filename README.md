@@ -32,7 +32,7 @@ I made a python program with user interface using tkinter. This program works li
 
 ## Portfolio Link
 
-`https://diegolibonati.github.io/DiegoLibonatiWeb/#/projects?q=Notepad%20program`
+`https://diegolibonati.github.io/DiegoLibonatiWeb/#/projects?q=Notepad%20Program`
 
 ## Video
 
