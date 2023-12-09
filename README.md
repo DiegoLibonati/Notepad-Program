@@ -18,21 +18,9 @@ I made a python program with user interface using tkinter. This program works li
 
 1. Tkinter
 
-## Galery
-
-![notepad-program](https://raw.githubusercontent.com/DiegoLibonati/DiegoLibonatiWeb/main/data/projects/Python/Imagenes/notepadpython-0.jpg)
-
-![notepad-program](https://raw.githubusercontent.com/DiegoLibonati/DiegoLibonatiWeb/main/data/projects/Python/Imagenes/notepadpython-1.jpg)
-
-![notepad-program](https://raw.githubusercontent.com/DiegoLibonati/DiegoLibonatiWeb/main/data/projects/Python/Imagenes/notepadpython-2.jpg)
-
-![notepad-program](https://raw.githubusercontent.com/DiegoLibonati/DiegoLibonatiWeb/main/data/projects/Python/Imagenes/notepadpython-3.jpg)
-
-![notepad-program](https://raw.githubusercontent.com/DiegoLibonati/DiegoLibonatiWeb/main/data/projects/Python/Imagenes/notepadpython-4.jpg)
-
 ## Portfolio Link
 
-`https://diegolibonati.github.io/DiegoLibonatiWeb/#/projects?q=Notepad%20Program`
+[`https://www.diegolibonati.com.ar/#/project/29`](https://www.diegolibonati.com.ar/#/project/29)
 
 ## Video
 
