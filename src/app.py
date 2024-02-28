@@ -2,23 +2,30 @@ from tkinter import *
 from tkinter import ttk, filedialog
 from tkinter import font
 
+
 root = Tk()
 
 root.title("Notepad APP")
 root.geometry("800x800")
-root.iconbitmap("icon.ico")
+root.iconbitmap("./src/assets/icon.ico")
 
-def browser_file():
-    filename = filedialog.askopenfilename(initialdir = "/",
-                                          title = "Select a File",
-                                          filetypes = (("Text files",
-                                                        "*.txt*"),
-                                                       ("all files",
-                                                        "*.*")))
+
+def browser_file() -> str:
+    filename = filedialog.askopenfilename(
+        initialdir = "/",
+        title = "Select a File",
+        filetypes = (
+            ("Text files", "*.txt*"),
+            ("All files", "*.*")
+        )
+    )
       
     return filename
 
-def get_txt_from_file(entry):
+
+def get_txt_from_file(
+    entry: Text
+) -> None:
     
     file = browser_file()
 
@@ -31,21 +38,34 @@ def get_txt_from_file(entry):
 
     txt.close()
 
-def save_file(entry):
-    files = [('Text Document', '*.txt')]
 
-    file = filedialog.asksaveasfile(mode="w",filetypes = files, defaultextension = files)
+def save_file(
+    entry: Text
+) -> None:
+    files = [
+        ('Text Document', '*.txt')
+    ]
+
+    file = filedialog.asksaveasfile(
+        mode="w",
+        filetypes = files, 
+        defaultextension = files
+    )
 
     file.write(str(entry.get(1.0, END)))
 
     file.close()
 
-def delete_txt(entry):
+
+def delete_txt(
+    entry: Text
+) -> None:
     entry.delete(1.0, END)
 
-def change_font():
+
+def change_font() -> None:
     win = Toplevel(root)
-    win.iconbitmap("./icon.ico")
+    win.iconbitmap("./src/assets/icon.ico")
     win.title("Cambiar fuente")
     win.geometry("400x200")
     win.resizable(False, False)
@@ -60,8 +80,11 @@ def change_font():
 
     Button(win, text="Guardar", command=lambda:set_config(combo_fonts ,entry_text, number_entry, win)).place(x=200, y=180, anchor="center")
 
-def set_config(font, entry,size, win):
-    
+
+def set_config(
+    font: ttk.Combobox, entry: Text, size: StringVar, 
+    win: Toplevel
+) -> None:
     try:
         new_font = font.get()
 
@@ -109,7 +132,6 @@ entry_text.pack(expand=True, fill=BOTH)
 # Scroll bar final config
 scrollbar_vertical.config(command=entry_text.yview)
 scrollbar_horizontal.config(command=entry_text.xview)
-
 
 
 root.mainloop()

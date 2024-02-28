@@ -4,7 +4,7 @@
 
 1. Clone the repository
 2. Join to the correct path of the clone
-3. Use `python notepad.py` to execute program
+3. Use `python ./src/app.py` to execute program
 
 ## Description
 
@@ -31,22 +31,26 @@ https://user-images.githubusercontent.com/99032604/199620478-9fc51184-1cc8-45ef-
 The `browser_file()` function allows you to open text files in this notepad:
 
 ```
-def browser_file():
-    filename = filedialog.askopenfilename(initialdir = "/",
-                                          title = "Select a File",
-                                          filetypes = (("Text files",
-                                                        "*.txt*"),
-                                                       ("all files",
-                                                        "*.*")))
-
+def browser_file() -> str:
+    filename = filedialog.askopenfilename(
+        initialdir = "/",
+        title = "Select a File",
+        filetypes = (
+            ("Text files", "*.txt*"),
+            ("All files", "*.*")
+        )
+    )
+      
     return filename
 ```
 
 The `get_txt_from_file()` function allows you to get the content of a text file for editing:
 
 ```
-def get_txt_from_file(entry):
-
+def get_txt_from_file(
+    entry: Text
+) -> None:
+    
     file = browser_file()
 
     txt = open(file, "r")
@@ -62,10 +66,18 @@ def get_txt_from_file(entry):
 The `save_file()` function allows us to save a text file in our operating system:
 
 ```
-def save_file(entry):
-    files = [('Text Document', '*.txt')]
+def save_file(
+    entry: Text
+) -> None:
+    files = [
+        ('Text Document', '*.txt')
+    ]
 
-    file = filedialog.asksaveasfile(mode="w",filetypes = files, defaultextension = files)
+    file = filedialog.asksaveasfile(
+        mode="w",
+        filetypes = files, 
+        defaultextension = files
+    )
 
     file.write(str(entry.get(1.0, END)))
 
@@ -75,16 +87,18 @@ def save_file(entry):
 The `delete_txt()` function allows you to delete the entire content of a text:
 
 ```
-def delete_txt(entry):
+def delete_txt(
+    entry: Text
+) -> None:
     entry.delete(1.0, END)
 ```
 
 The `change_font()` function allows you to change the font of the text:
 
 ```
-def change_font():
+def change_font() -> None:
     win = Toplevel(root)
-    win.iconbitmap("./icon.ico")
+    win.iconbitmap("./src/assets/icon.ico")
     win.title("Cambiar fuente")
     win.geometry("400x200")
     win.resizable(False, False)
@@ -103,8 +117,10 @@ def change_font():
 The `set_config()` function allows you to change the current configuration to a new one chosen by the user, you can change the font type and the font size:
 
 ```
-def set_config(font, entry,size, win):
-
+def set_config(
+    font: ttk.Combobox, entry: Text, size: StringVar, 
+    win: Toplevel
+) -> None:
     try:
         new_font = font.get()
 
@@ -118,6 +134,6 @@ def set_config(font, entry,size, win):
         win.destroy()
     except ValueError:
         print("No se hicieron cambios por un error o porque no se llenaron nuevos campos")
-
+        
         win.destroy()
 ```
