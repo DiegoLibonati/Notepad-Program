@@ -1,4 +1,4 @@
-# Notepad-Program
+# Notepad Program
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ I made a python program with user interface using tkinter. This program works li
 
 ## Portfolio Link
 
-[`https://www.diegolibonati.com.ar/#/project/29`](https://www.diegolibonati.com.ar/#/project/29)
+[`https://www.diegolibonati.com.ar/#/project/Notepad-Program`](https://www.diegolibonati.com.ar/#/project/Notepad-Program)
 
 ## Video
 
