@@ -1,6 +1,6 @@
 from tkinter import Tk
 
-from src.models.InterfaceApp import InterfaceApp
+from src.models import InterfaceApp
 
 
 def main():

@@ -1,17 +1,9 @@
-from tkinter import NONE
-from tkinter import BOTH
-from tkinter import Y
-from tkinter import X
-from tkinter import RIGHT
-from tkinter import BOTTOM
-from tkinter import HORIZONTAL
-from tkinter import END
-from tkinter import CENTER
+from tkinter import BOTH, BOTTOM, CENTER, END, HORIZONTAL, NONE, RIGHT, X, Y
 
 FONT_ARIAL = "Arial"
 FONT_ROBOTO = "Roboto"
-FONT_ARIAL_10 = (f"{FONT_ARIAL} 10")
-FONT_ROBOTO_10 = (f"{FONT_ROBOTO} 10")
+FONT_ARIAL_10 = f"{FONT_ARIAL} 10"
+FONT_ROBOTO_10 = f"{FONT_ROBOTO} 10"
 
 WRAP_NONE = NONE
 

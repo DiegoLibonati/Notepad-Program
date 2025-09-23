@@ -1,19 +1,18 @@
 import os
 import shutil
+from test.constants import DIR_TXTS, PATH_TXT, TEXT_TXT
 from tkinter import Tk
 
 from pytest import fixture
 
-from src.models.InterfaceApp import InterfaceApp
+from src.models import InterfaceApp
 
-from test.constants import DIR_TXTS
-from test.constants import PATH_TXT
-from test.constants import TEXT_TXT
 
 @fixture(scope="session")
 def interface_app() -> InterfaceApp:
     root = Tk()
     return InterfaceApp(root=root)
+
 
 def pytest_sessionstart():
     """Se ejecuta antes de que comiencen los tests."""
