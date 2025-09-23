@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.models import InterfaceApp
+from src.ui import InterfaceApp
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -22,22 +22,6 @@ def test_initial_config_tk_app(interface_app: InterfaceApp) -> None:
     assert title == "Notepad APP"
     assert geometry == "800x780"
     assert resizable == (False, False)
-
-
-def test_browser_file(interface_app: InterfaceApp) -> None:
-    path = PATH_TXT
-
-    with patch("tkinter.filedialog.askopenfilename") as askopenfilename:
-        askopenfilename.return_value = path
-
-        file_path = interface_app.browser_file()
-
-        assert file_path == path
-        askopenfilename.assert_called_once_with(
-            initialdir="/",
-            title="Select a File",
-            filetypes=(("Text files", "*.txt*"), ("All files", "*.*")),
-        )
 
 
 def test_get_txt_from_file(interface_app: InterfaceApp) -> None:
