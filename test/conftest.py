@@ -5,7 +5,7 @@ from tkinter import Tk
 
 from pytest import fixture
 
-from src.ui import InterfaceApp
+from src.ui.interface_app import InterfaceApp
 
 
 @fixture(scope="session")
