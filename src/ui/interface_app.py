@@ -14,7 +14,7 @@ from tkinter.ttk import Combobox
 
 from src.core.paths import PATH_ICON
 from src.services.file_service import open_file, save_file
-from src.utils.constants import (
+from src.utils.styles import (
     ANCHOR_CENTER,
     FILL_BOTH,
     FILL_X,
