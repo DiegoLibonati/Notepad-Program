@@ -1,1 +1,0 @@
-APP_ICON = "./src/assets/icon.ico"

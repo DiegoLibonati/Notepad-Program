@@ -1,4 +1,3 @@
-# src/ui/interface_app.py
 from tkinter import (
     Button,
     Entry,
@@ -13,6 +12,7 @@ from tkinter import (
 )
 from tkinter.ttk import Combobox
 
+from src.core.paths import PATH_ICON
 from src.services.file_service import open_file, save_file
 from src.utils.constants import (
     ANCHOR_CENTER,
@@ -27,7 +27,6 @@ from src.utils.constants import (
     SIDE_RIGHT,
     WRAP_NONE,
 )
-from src.utils.paths import APP_ICON
 
 
 class InterfaceApp:
@@ -36,7 +35,7 @@ class InterfaceApp:
         self._root.title("Notepad APP")
         self._root.geometry("800x800")
         self._root.resizable(False, False)
-        self._root.iconbitmap(APP_ICON)
+        self._root.iconbitmap(PATH_ICON)
 
         self._create_widgets()
         self._create_menu()
@@ -99,7 +98,7 @@ class InterfaceApp:
 
     def _open_win_config_font(self) -> None:
         self._win_config_font = Toplevel(master=self._root)
-        self._win_config_font.iconbitmap(APP_ICON)
+        self._win_config_font.iconbitmap(PATH_ICON)
         self._win_config_font.title("Change font")
         self._win_config_font.geometry("400x200")
         self._win_config_font.resizable(False, False)
