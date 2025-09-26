@@ -5,6 +5,7 @@ from tkinter import Tk
 
 from pytest import fixture
 
+from src.services.file_service import FileService
 from src.ui.interface_app import InterfaceApp
 
 
@@ -12,6 +13,11 @@ from src.ui.interface_app import InterfaceApp
 def interface_app() -> InterfaceApp:
     root = Tk()
     return InterfaceApp(root=root)
+
+
+@fixture(scope="session")
+def file_service() -> FileService:
+    return FileService()
 
 
 def pytest_sessionstart():

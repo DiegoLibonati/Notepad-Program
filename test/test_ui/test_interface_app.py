@@ -111,7 +111,8 @@ def test_save_config_font_invalid_fields(interface_app: InterfaceApp) -> None:
 
 
 def test_save_config_font_invalid_int(interface_app: InterfaceApp) -> None:
-    interface_app._open_win_config_font()
+    with patch.object(interface_app._win_config_font, "iconbitmap", return_value=None):
+        interface_app._open_win_config_font()
 
     new_size = "asdas"
     new_font = "Terminal"

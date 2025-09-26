@@ -13,7 +13,7 @@ from tkinter import (
 from tkinter.ttk import Combobox
 
 from src.core.paths import PATH_ICON
-from src.services.file_service import open_file, save_file
+from src.services.file_service import FileService
 from src.utils.styles import (
     ANCHOR_CENTER,
     FILL_BOTH,
@@ -30,12 +30,14 @@ from src.utils.styles import (
 
 
 class InterfaceApp:
-    def __init__(self, root: Tk) -> None:
+    def __init__(self, root: Tk, file_service: FileService = FileService()) -> None:
         self._root = root
         self._root.title("Notepad APP")
         self._root.geometry("800x800")
         self._root.resizable(False, False)
         self._root.iconbitmap(PATH_ICON)
+
+        self.__file_service: FileService = file_service
 
         self._create_widgets()
         self._create_menu()
@@ -84,14 +86,14 @@ class InterfaceApp:
         )
 
     def _get_txt_from_file(self) -> None:
-        file_content = open_file()
+        file_content = self.__file_service.open_file()
         if file_content:
             self._text_entry.delete(1.0, POSITION_END)
             self._text_entry.insert(POSITION_END, file_content)
 
     def _save_file(self) -> None:
         text_content = self._text_entry.get(1.0, POSITION_END)
-        save_file(text_content)
+        self.__file_service.save_file(text_content)
 
     def _delete_txt(self) -> None:
         self._text_entry.delete(1.0, POSITION_END)
