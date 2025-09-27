@@ -27,7 +27,7 @@ I made a python program with user interface using tkinter. This program works li
 
 ## Technologies used
 
-1. Python
+1. Python >= 3.11
 
 ## Libraries used
 
