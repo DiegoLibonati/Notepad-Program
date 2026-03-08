@@ -1,0 +1,38 @@
+[project]
+name = "notepad-program"
+version = "1.0.0"
+description = "I made a python program with user interface using tkinter. This program works like notepad, you can open text files, create and edit them. In addition you can change the font type and change the font type."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+testpaths = ["test"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+log_cli = true
+log_cli_level = "WARNING"
+addopts = "-v --tb=short"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+    "ignore::pytest.PytestCollectionWarning",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+env = []
+
+[tool.ruff]
+line-length = 160
+exclude = [".git", "__pycache__", "env", "venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP"]
+ignore = ["E203"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

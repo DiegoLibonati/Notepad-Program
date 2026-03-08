@@ -1,140 +1,158 @@
-import logging
-from test.constants import PATH_TXT, TEXT_TXT
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from src.ui.interface_app import InterfaceApp
-
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+from src.ui.styles import Styles
 
 
-def test_initial_config_tk_app(interface_app: InterfaceApp) -> None:
-    root = interface_app._root
-    root.update()
-
-    title = root.title()
-    geometry = root.geometry().split("+")[0]
-    resizable = root.resizable()
-
-    assert title == "Notepad APP"
-    assert geometry == "800x780"
-    assert resizable == (False, False)
-
-
-def test_get_txt_from_file(interface_app: InterfaceApp) -> None:
-    path = PATH_TXT
-
-    interface_app._create_widgets()
-
-    with patch("tkinter.filedialog.askopenfilename") as askopenfilename:
-        askopenfilename.return_value = path
-
-        interface_app._get_txt_from_file()
-
-        text_entry = interface_app._text_entry.get(1.0, "end-1c")
-
-        assert text_entry == TEXT_TXT
-        askopenfilename.assert_called_once_with(
-            initialdir="/",
-            title="Select a File",
-            filetypes=(("Text files", "*.txt*"), ("All files", "*.*")),
-        )
+@pytest.fixture
+def interface_app(mock_root: MagicMock, mock_styles: MagicMock) -> InterfaceApp:
+    with (
+        patch("src.ui.interface_app.MainView") as mock_main_view_class,
+        patch("src.ui.interface_app.PATH_ICON", "icon.ico"),
+    ):
+        mock_main_view: MagicMock = MagicMock()
+        mock_main_view.grid = MagicMock()
+        mock_main_view_class.return_value = mock_main_view
+        instance: InterfaceApp = InterfaceApp.__new__(InterfaceApp)
+        instance._styles = mock_styles
+        instance._root = mock_root
+        instance._config = MagicMock()
+        instance._main_view = mock_main_view
+        return instance
 
 
-def test_save_file(interface_app: InterfaceApp) -> None:
-    interface_app._create_widgets()
-    interface_app._text_entry.insert(1.0, TEXT_TXT)
+class TestInterfaceAppInit:
+    def test_stores_styles(self, interface_app: InterfaceApp, mock_styles: MagicMock) -> None:
+        assert interface_app._styles == mock_styles
 
-    with patch("tkinter.filedialog.asksaveasfile") as asksaveasfile:
-        mock_file = MagicMock()
-        asksaveasfile.return_value = mock_file
+    def test_stores_root(self, interface_app: InterfaceApp, mock_root: MagicMock) -> None:
+        assert interface_app._root == mock_root
 
-        interface_app._save_file()
+    def test_title_is_set(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.PATH_ICON", "icon.ico"),
+        ):
+            mock_main_view_class.return_value.grid = MagicMock()
+            InterfaceApp(root=mock_root, config=MagicMock(), styles=mock_styles)
 
-        asksaveasfile.assert_called_once_with(
-            mode="w",
-            filetypes=[("Text Document", "*.txt")],
-            defaultextension=[("Text Document", "*.txt")],
-        )
+        mock_root.title.assert_called_once_with("Notepad APP")
 
-        text_entry = interface_app._text_entry.get(1.0, "end")
+    def test_geometry_is_set(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.PATH_ICON", "icon.ico"),
+        ):
+            mock_main_view_class.return_value.grid = MagicMock()
+            InterfaceApp(root=mock_root, config=MagicMock(), styles=mock_styles)
 
-        mock_file.write.assert_called_once_with(text_entry)
+        mock_root.geometry.assert_called_once_with("800x800")
 
-        mock_file.close.assert_called_once()
+    def test_is_not_resizable(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.PATH_ICON", "icon.ico"),
+        ):
+            mock_main_view_class.return_value.grid = MagicMock()
+            InterfaceApp(root=mock_root, config=MagicMock(), styles=mock_styles)
 
+        mock_root.resizable.assert_called_once_with(False, False)
 
-def test_delete_txt(interface_app: InterfaceApp) -> None:
-    interface_app._create_widgets()
-    interface_app._text_entry.insert(1.0, TEXT_TXT)
+    def test_default_styles_is_styles_instance(self, mock_root: MagicMock) -> None:
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.PATH_ICON", "icon.ico"),
+        ):
+            mock_main_view_class.return_value.grid = MagicMock()
+            app: InterfaceApp = InterfaceApp(root=mock_root, config=MagicMock())
 
-    text_entry = interface_app._text_entry.get(1.0, "end-1c")
+        assert isinstance(app._styles, Styles)
 
-    assert text_entry == TEXT_TXT
+    def test_main_view_is_created(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.PATH_ICON", "icon.ico"),
+        ):
+            mock_main_view_class.return_value.grid = MagicMock()
+            InterfaceApp(root=mock_root, config=MagicMock(), styles=mock_styles)
 
-    interface_app._delete_txt()
-
-    text_entry = interface_app._text_entry.get(1.0, "end-1c")
-
-    assert text_entry == ""
-
-
-def test_open_win_config_font(interface_app: InterfaceApp) -> None:
-    interface_app._open_win_config_font()
-    win_font = interface_app._win_config_font
-
-    assert win_font
-    assert win_font.title() == "Change font"
-    assert win_font.geometry().split("+")[0] == "400x200"
-    assert win_font.resizable() == (False, False)
-
-    assert interface_app._entry_number
-    assert interface_app._combo_fonts
-
-
-def test_save_config_font_invalid_fields(interface_app: InterfaceApp) -> None:
-    interface_app._open_win_config_font()
-
-    new_size = ""
-    new_font = ""
-
-    interface_app._entry_number.set(new_size)
-    interface_app._combo_fonts.set(new_font)
-
-    with pytest.raises(ValueError) as exc_info:
-        interface_app._save_config_font()
-
-    assert str(exc_info.value) == "You must enter valid fields."
+        mock_main_view_class.assert_called_once()
 
 
-def test_save_config_font_invalid_int(interface_app: InterfaceApp) -> None:
-    with patch.object(interface_app._win_config_font, "iconbitmap", return_value=None):
-        interface_app._open_win_config_font()
+class TestInterfaceAppGetTxtFromFile:
+    def test_set_text_called_when_file_content_is_not_none(self, interface_app: InterfaceApp) -> None:
+        with patch("src.ui.interface_app.FileService.open_file", return_value="file content"):
+            interface_app._get_txt_from_file()
 
-    new_size = "asdas"
-    new_font = "Terminal"
+        interface_app._main_view.set_text.assert_called_once_with("file content")
 
-    interface_app._entry_number.set(new_size)
-    interface_app._combo_fonts.set(new_font)
+    def test_set_text_not_called_when_file_content_is_none(self, interface_app: InterfaceApp) -> None:
+        with patch("src.ui.interface_app.FileService.open_file", return_value=None):
+            interface_app._get_txt_from_file()
 
-    with pytest.raises(ValueError) as exc_info:
-        interface_app._save_config_font()
-
-    assert str(exc_info.value) == "You must enter a valid number in the font size."
+        interface_app._main_view.set_text.assert_not_called()
 
 
-def test_save_config_font(interface_app: InterfaceApp) -> None:
-    interface_app._open_win_config_font()
+class TestInterfaceAppSaveFile:
+    def test_get_text_called_before_save(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_text.return_value = "some text"
 
-    new_size = "10"
-    new_font = "Terminal"
+        with patch("src.ui.interface_app.FileService.save_file") as _mock_save:
+            interface_app._save_file()
 
-    interface_app._entry_number.set(new_size)
-    interface_app._combo_fonts.set(new_font)
+        interface_app._main_view.get_text.assert_called_once()
 
-    interface_app._save_config_font()
+    def test_save_file_called_with_text_content(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_text.return_value = "some text"
 
-    assert interface_app._text_entry["font"] == f"{new_font} {new_size}"
+        with patch("src.ui.interface_app.FileService.save_file") as mock_save:
+            interface_app._save_file()
+
+        mock_save.assert_called_once_with("some text")
+
+
+class TestInterfaceAppDeleteTxt:
+    def test_clear_text_is_called(self, interface_app: InterfaceApp) -> None:
+        interface_app._delete_txt()
+        interface_app._main_view.clear_text.assert_called_once()
+
+
+class TestInterfaceAppOpenWinConfigFont:
+    def test_font_config_view_is_created(self, interface_app: InterfaceApp) -> None:
+        with patch("src.ui.interface_app.FontConfigView") as mock_font_config_view:
+            interface_app._open_win_config_font()
+
+        mock_font_config_view.assert_called_once()
+
+    def test_font_config_view_receives_on_save(self, interface_app: InterfaceApp) -> None:
+        with patch("src.ui.interface_app.FontConfigView") as mock_font_config_view:
+            interface_app._open_win_config_font()
+
+        _, kwargs = mock_font_config_view.call_args
+        assert callable(kwargs.get("on_save"))
+
+
+class TestInterfaceAppSaveConfigFont:
+    def test_raises_value_error_when_font_is_empty(self, interface_app: InterfaceApp) -> None:
+        with pytest.raises(ValueError, match="valid fields"):
+            interface_app._save_config_font("", "12")
+
+    def test_raises_value_error_when_size_is_empty(self, interface_app: InterfaceApp) -> None:
+        with pytest.raises(ValueError, match="valid fields"):
+            interface_app._save_config_font("Arial", "")
+
+    def test_raises_value_error_when_size_is_not_numeric(self, interface_app: InterfaceApp) -> None:
+        with pytest.raises(ValueError, match="valid number"):
+            interface_app._save_config_font("Arial", "abc")
+
+    def test_set_font_called_with_correct_values(self, interface_app: InterfaceApp) -> None:
+        interface_app._save_config_font("Arial", "14")
+        interface_app._main_view.set_font.assert_called_once_with("Arial", 14)
+
+    def test_size_is_converted_to_int(self, interface_app: InterfaceApp) -> None:
+        interface_app._save_config_font("Arial", "14")
+        _, kwargs = interface_app._main_view.set_font.call_args
+        call_args: tuple = interface_app._main_view.set_font.call_args[0]
+        assert isinstance(call_args[1], int)

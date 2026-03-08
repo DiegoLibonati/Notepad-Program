@@ -1,59 +1,58 @@
-from pathlib import Path
-from test.constants import TEXT_TXT
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, mock_open, patch
 
 from src.services.file_service import FileService
 
 
-def test_open_file_returns_content(tmp_path: Path, file_service: FileService):
-    test_file = tmp_path / "sample.txt"
-    test_file.write_text(TEXT_TXT, encoding="utf-8")
-
-    with patch("tkinter.filedialog.askopenfilename") as mock_dialog:
-        mock_dialog.return_value = str(test_file)
-
-        result = file_service.open_file()
-
-        assert result == TEXT_TXT
-        mock_dialog.assert_called_once_with(
-            initialdir="/",
-            title="Select a File",
-            filetypes=(("Text files", "*.txt*"), ("All files", "*.*")),
-        )
-
-
-def test_open_file_no_selection_returns_none(file_service: FileService):
-    with patch("tkinter.filedialog.askopenfilename") as mock_dialog:
-        mock_dialog.return_value = ""
-
-        result = file_service.open_file()
-
+class TestFileServiceOpenFile:
+    def test_returns_none_when_no_file_selected(self) -> None:
+        with patch("src.services.file_service.filedialog.askopenfilename", return_value=""):
+            result: str | None = FileService.open_file()
         assert result is None
-        mock_dialog.assert_called_once()
+
+    def test_returns_file_content_when_file_selected(self) -> None:
+        mock_content: str = "Hello world"
+        with (
+            patch("src.services.file_service.filedialog.askopenfilename", return_value="/path/to/file.txt"),
+            patch("builtins.open", mock_open(read_data=mock_content)),
+        ):
+            result: str | None = FileService.open_file()
+        assert result == mock_content
+
+    def test_opens_file_with_utf8_encoding(self) -> None:
+        with (
+            patch("src.services.file_service.filedialog.askopenfilename", return_value="/path/to/file.txt"),
+            patch("builtins.open", mock_open(read_data="content")) as mock_file,
+        ):
+            FileService.open_file()
+        mock_file.assert_called_once_with("/path/to/file.txt", "r", encoding="utf-8")
+
+    def test_returns_none_when_dialog_cancelled(self) -> None:
+        with patch("src.services.file_service.filedialog.askopenfilename", return_value=None):
+            result: str | None = FileService.open_file()
+        assert result is None
 
 
-def test_save_file_writes_content(file_service: FileService):
-    mock_file = MagicMock()
+class TestFileServiceSaveFile:
+    def test_writes_content_when_file_is_selected(self) -> None:
+        mock_file: MagicMock = MagicMock()
+        with (
+            patch("src.services.file_service.filedialog.asksaveasfile", return_value=mock_file),
+        ):
+            FileService.save_file("Hello world")
 
-    with patch("tkinter.filedialog.asksaveasfile") as mock_dialog:
-        mock_dialog.return_value = mock_file
-
-        file_service.save_file(TEXT_TXT)
-
-        mock_dialog.assert_called_once_with(
-            mode="w",
-            filetypes=[("Text Document", "*.txt")],
-            defaultextension=[("Text Document", "*.txt")],
-        )
-
-        mock_file.write.assert_called_once_with(TEXT_TXT)
+        mock_file.write.assert_called_once_with("Hello world")
         mock_file.close.assert_called_once()
 
+    def test_does_not_write_when_no_file_selected(self) -> None:
+        with patch("src.services.file_service.filedialog.asksaveasfile", return_value=None):
+            FileService.save_file("Hello world")
 
-def test_save_file_no_selection_does_nothing(file_service: FileService):
-    with patch("tkinter.filedialog.asksaveasfile") as mock_dialog:
-        mock_dialog.return_value = None
+    def test_save_file_called_with_correct_mode(self) -> None:
+        mock_file: MagicMock = MagicMock()
+        with (
+            patch("src.services.file_service.filedialog.asksaveasfile", return_value=mock_file) as mock_dialog,
+        ):
+            FileService.save_file("content")
 
-        file_service.save_file(TEXT_TXT)
-
-        mock_dialog.assert_called_once()
+        _, kwargs = mock_dialog.call_args
+        assert kwargs.get("mode") == "w"

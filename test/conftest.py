@@ -1,41 +1,68 @@
-import os
-import shutil
-from test.constants import DIR_TXTS, PATH_TXT, TEXT_TXT
-from tkinter import Tk
+from tkinter import StringVar
+from unittest.mock import MagicMock
 
-from pytest import fixture
+import pytest
 
-from src.services.file_service import FileService
-from src.ui.interface_app import InterfaceApp
+from src.ui.styles import Styles
 
 
-@fixture(scope="session")
-def interface_app() -> InterfaceApp:
-    root = Tk()
-    return InterfaceApp(root=root)
+@pytest.fixture
+def mock_root() -> MagicMock:
+    root: MagicMock = MagicMock()
+    root.title = MagicMock()
+    root.geometry = MagicMock()
+    root.resizable = MagicMock()
+    root.config = MagicMock()
+    root.iconbitmap = MagicMock()
+    root.columnconfigure = MagicMock()
+    root.rowconfigure = MagicMock()
+    return root
 
 
-@fixture(scope="session")
-def file_service() -> FileService:
-    return FileService()
+@pytest.fixture
+def mock_styles() -> MagicMock:
+    styles: MagicMock = MagicMock()
+    styles.WHITE_COLOR = "#FFFFFF"
+    styles.BLACK_COLOR = "#000000"
+    styles.FONT_ARIAL_10 = "Arial 10"
+    styles.FONT_ROBOTO_10 = "Roboto 10"
+    styles.FONT_ROBOTO_12 = "Roboto 12"
+    styles.WRAP_NONE = "none"
+    styles.ORIENT_HORIZONTAL = "horizontal"
+    styles.POSITION_END = "end"
+    return styles
 
 
-def pytest_sessionstart():
-    """Se ejecuta antes de que comiencen los tests."""
-    path_txt = PATH_TXT
-    dir_txt = DIR_TXTS
-    text = TEXT_TXT
-
-    if not os.path.exists(dir_txt):
-        os.makedirs(dir_txt)
-
-    with open(path_txt, "w") as file:
-        file.write(text)
-        file.close()
+@pytest.fixture
+def real_styles() -> Styles:
+    return Styles()
 
 
-def pytest_sessionfinish():
-    """Se ejecuta después de que todos los tests hayan terminado."""
-    dir = DIR_TXTS
+@pytest.fixture
+def mock_on_open() -> MagicMock:
+    return MagicMock()
 
-    shutil.rmtree(path=dir)
+
+@pytest.fixture
+def mock_on_save() -> MagicMock:
+    return MagicMock()
+
+
+@pytest.fixture
+def mock_on_delete() -> MagicMock:
+    return MagicMock()
+
+
+@pytest.fixture
+def mock_on_change_font() -> MagicMock:
+    return MagicMock()
+
+
+@pytest.fixture
+def mock_on_save_font() -> MagicMock:
+    return MagicMock()
+
+
+@pytest.fixture
+def variable() -> MagicMock:
+    return MagicMock(spec=StringVar)
