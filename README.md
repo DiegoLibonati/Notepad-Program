@@ -35,17 +35,18 @@ I made a python program with user interface using tkinter. This program works li
 #### Requirements.txt
 
 ```
-pytest==8.4.2
-pytest-env==1.1.5
-pytest-cov==4.1.0
-pytest-timeout==2.3.1
-pytest-xdist==3.5.0
+python-dotenv==1.0.1
+pre-commit==4.3.0
 ```
 
 #### Requirements.test.txt
 
 ```
 pytest==8.4.2
+pytest-env==1.1.5
+pytest-cov==4.1.0
+pytest-timeout==2.3.1
+pytest-xdist==3.5.0
 ```
 
 #### Requirements.build.txt
