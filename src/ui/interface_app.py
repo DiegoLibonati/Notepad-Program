@@ -1,6 +1,7 @@
 from tkinter import Tk
 
 from src.configs.default_config import DefaultConfig
+from src.constants.messages import MESSAGE_ERROR_NOT_VALID_FIELD_NUM, MESSAGE_ERROR_NOT_VALID_FIELDS
 from src.constants.paths import PATH_ICON
 from src.services.file_service import FileService
 from src.ui.styles import Styles
@@ -51,11 +52,11 @@ class InterfaceApp:
 
     def _save_config_font(self, new_font: str, new_size: str) -> None:
         if not new_font or not new_size:
-            raise ValueError("You must enter valid fields.")
+            raise ValueError(MESSAGE_ERROR_NOT_VALID_FIELDS)
 
         try:
             new_size = int(new_size)
         except Exception:
-            raise ValueError("You must enter a valid number in the font size.")
+            raise ValueError(MESSAGE_ERROR_NOT_VALID_FIELD_NUM)
 
         self._main_view.set_font(new_font, new_size)
